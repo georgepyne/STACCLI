@@ -8,11 +8,37 @@ on:
       - main
 
 jobs:
-  codecov:
-    name: codecov
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Excecute tests
-        run: echo "test"
   
+  # run-tests:
+  #   name: run-tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Excecute tests
+  #       run: echo "test"
+  python-matrix:
+    name: python-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9, 3.10, 3.11]
+        fail-fast: true 
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v2
+      
+      - name: Setup python
+      - uses: actions/setup-python@v4
+      - with:
+        python-version: ${{ matrix.python-version }}
+      
+      - name: Setup test dependencies
+      - run: python -m pip install pytest .
+      
+      - name: Run Tests
+      - run: pytest
+
+
+
+
+ 
