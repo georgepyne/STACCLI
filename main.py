@@ -7,12 +7,16 @@ def main():
     )
     parser.add_argument("-b", "--bounds", type=str)
     parser.add_argument("-t", "--time", type=str)
+    parser.add_argument("-id", "--collection_id", type=str)
     args = parser.parse_args()
     bounds = args.bounds
     time = args.time
+    collection_id = args.collection_id
     print(bounds)
     print(time)
-    print(f"Query Microsoft Planetary Computer:\nbounds = {bounds}\ntime = {time}")
+    print(
+        f"Query Microsoft Planetary Computer.\nCollection: {collection_id}\nBounds: {bounds}\nTime: {time}"
+    )
 
 
 if __name__ == "__main__":
