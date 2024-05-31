@@ -18,9 +18,10 @@ def main():
 
     items = query_planetary_computer_stac(time, bounds, collection_id)
 
-    print(
-        f"Query Microsoft Planetary Computer.\nCollection: {collection_id}\nBounds: {bounds}"
-    )
+    print(result.status_code)
+    # print(
+    #     f"Query Microsoft Planetary Computer.\nCollection: {collection_id}\nBounds: {bounds}"
+    # )
 
 
 if __name__ == "__main__":

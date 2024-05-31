@@ -1,0 +1,30 @@
+[project]
+name = "rgb"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+dependencies = [
+    "aiohttp==3.9.5",
+    "GDAL==3.8.5",
+    "OWSLib==0.30.0",
+    "Shapely==2.0.4",
+    "planetary-computer==1.0.0",
+    "pyproj==3.6.1",
+    "pystac-client==0.7.7",
+    "requests==2.31.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.3.4,<0.4",
+    "pre-commit>=3.6.2,<4.0"
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.ruff.format]
+quote-style = "double"
