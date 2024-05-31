@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import List
 from datetime import datetime
 
 
@@ -8,6 +8,18 @@ def parse_bbox(bounds: str) -> List[float]:
         if len(bbox) != 4:
             raise ValueError(
                 "Invalid bounding box length. Bounding box requires four bounds: min_lon, min_lat, max_lat, max_lon"
+            )
+
+        if any(
+            [
+                ((bbox[0] < -180) | (bbox[0] > 180)),
+                ((bbox[1] < -90) | (bbox[1] > 90)),
+                ((bbox[2] < -180) | (bbox[2] > 180)),
+                ((bbox[3] < -90) | (bbox[3] > 90)),
+            ]
+        ):
+            raise ValueError(
+                "Provided bounds are invalid. Bounds must be valid WGS84 coordinates."
             )
     except ValueError as e:
         # log.error(ValueError)
