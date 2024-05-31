@@ -1,4 +1,6 @@
 import argparse
+from src.stac.planetary_computer_client import query_planetary_computer_stac
+from src.stac.stac_parameter_parser import parse_time_window, parse_bbox
 
 
 def main():
@@ -9,13 +11,15 @@ def main():
     parser.add_argument("-t", "--time", type=str)
     parser.add_argument("-id", "--collection_id", type=str)
     args = parser.parse_args()
-    bounds = args.bounds
-    time = args.time
+    bounds = parse_bbox(args.bounds)
+    time = parse_time_window(args.time)
+
     collection_id = args.collection_id
-    print(bounds)
-    print(time)
+
+    items = query_planetary_computer_stac(time, bounds, collection_id)
+
     print(
-        f"Query Microsoft Planetary Computer.\nCollection: {collection_id}\nBounds: {bounds}\nTime: {time}"
+        f"Query Microsoft Planetary Computer.\nCollection: {collection_id}\nBounds: {bounds}"
     )
 
 
