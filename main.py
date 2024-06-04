@@ -18,6 +18,10 @@ def main():
     print(
         f"Query Microsoft Planetary Computer.\nCollection: {collection_id}\nBounds: {bounds}"
     )
+    cog_urls = [i["assets"]["qa"]["href"] for i in items.to_dict()["features"]]
+    cogs = [rasterio.open(i) for i in cog_urls]
+    with rasterio.open(cog_urls[0]) as src:
+        arr = src.read(out_shape=(src.height // 10, src.width // 10))
 
 
 if __name__ == "__main__":

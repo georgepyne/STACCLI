@@ -10,3 +10,10 @@ def test_time_parser():
 @mark.parser
 def test_bounds_parser():
     assert isinstance(parse_bbox("-1.066919,52.209855,-1.003834,52.231755"), list)
+
+
+# @mark.validation
+# def test_validate_bounds():
+
+# @mark.validation
+# def test_validate_time():

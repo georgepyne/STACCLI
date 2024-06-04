@@ -17,13 +17,13 @@ jobs:
         # fail-fast: [false]
         fail-fast: [true]
     steps:
-      # - name: Setup python
+      - name: Setup python
       - uses: actions/setup-python@v4
 
-      # - name: Setup test dependencies
+      - name: Setup test dependencies
       - run: python -m pip install pytest 
       
-      # - name: Run Tests
+      - name: Run Tests
       - run: pytest
 
 
