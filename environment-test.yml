@@ -302,7 +302,7 @@ dependencies:
   - wcwidth=0.2.5
   - webencodings=0.5.1
   - websocket-client=1.8.0
-  - wheel=0.43.0=
+  - wheel=0.43.0
   - widgetsnbextension=4.0.10
   - xerces-c=3.2.5
   - xorg-libxau=1.0.11
