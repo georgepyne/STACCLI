@@ -2,6 +2,12 @@ from typing import List
 from datetime import datetime
 from shapely.geometry import Polygon, mapping
 import rasterio
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 def parse_bbox(bounds: str) -> List[float]:
     try:
         bbox = list(map(float, bounds.split(",")))
@@ -11,12 +17,12 @@ def parse_bbox(bounds: str) -> List[float]:
             )
 
         if any(
-            [
-                ((bbox[0] < -180) | (bbox[0] > 180)),
-                ((bbox[1] < -90) | (bbox[1] > 90)),
-                ((bbox[2] < -180) | (bbox[2] > 180)),
-                ((bbox[3] < -90) | (bbox[3] > 90)),
-            ]
+                [
+                    ((bbox[0] < -180) | (bbox[0] > 180)),
+                    ((bbox[1] < -90) | (bbox[1] > 90)),
+                    ((bbox[2] < -180) | (bbox[2] > 180)),
+                    ((bbox[3] < -90) | (bbox[3] > 90)),
+                ]
         ):
             raise ValueError(
                 "Provided bounds are invalid. Bounds must be valid WGS84 coordinates."
