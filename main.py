@@ -20,13 +20,13 @@ def main():
     parser.add_argument("-b", "--bounds", type=str)
     parser.add_argument("-t", "--time", type=str)
     parser.add_argument("-c", "--collection", type=str)
-    parser.add_argument("-f", "--file", type=str, default=os.getcwd())
+    parser.add_argument("-d", "--directory", type=str, default=os.getcwd())
     # parse args
     args = parser.parse_args()
     bounds = parse_bbox(args.bounds)
     time = parse_time_window(args.time)
     collection_id = args.collection
-    file_path = args.file
+    file_path = args.directory
     items = query_planetary_computer_stac(time, bounds, collection_id)
     ordered_features = order_stac(items)
     # open cogs

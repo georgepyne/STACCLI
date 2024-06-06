@@ -33,6 +33,7 @@ def merge_cogs(cogs: List[DatasetReader], path: str, time: str) -> None:
 def clip_cog(cogs: List[DatasetReader], polygon: Polygon, path: str, time: str) -> Dict:
     geojson_feature = geojson.Feature(geometry=polygon, properties={})
     gt = rasterio.open(os.path.join(path, f"{time}.tif"))
+    print("Clipping raster.")
     clipped, clip_transform = mask(gt, shapes=[dict(geojson_feature["geometry"])], crop=True)
     out_meta = cogs[0].meta.copy()
     out_meta.update(
@@ -43,7 +44,7 @@ def clip_cog(cogs: List[DatasetReader], polygon: Polygon, path: str, time: str) 
             "transform": clip_transform,
         }
     )
-    with rasterio.open(os.path.join(path, f"{time}.tif"), "w", **out_meta) as dest1:
+    with rasterio.open(f"{path}/{time}.tif", "w", **out_meta) as dest1:
         dest1.write(clipped)
 
     return {0: clipped.shape[1], 1: clipped.shape[2]}
