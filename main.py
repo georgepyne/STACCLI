@@ -1,8 +1,8 @@
 import argparse
 from src.stac.planetary_computer_client import query_planetary_computer_stac
 from src.stac.stac_parameter_parser import parse_time_window, parse_bbox
-from src.stac.utils import order_stac, get_bbox_and_footprint
-from src.cog.utils import merge_cogs, clip_cog
+from src.stac.stac_utils import order_stac, get_bbox_and_footprint
+from src.cog.cog_utils import merge_cogs, clip_cog
 import rasterio
 from shapely.geometry import box
 import pystac
@@ -12,7 +12,7 @@ import json
 import os
 import logging
 import sys
-from shapely.geometry import Polygon, mapping
+
 
 my_logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 from pytest import mark
 import pytest
-from STACCLI.src.stac.stac_parameter_parser import parse_time_window, parse_bbox
+from STACCLI.src.stac.stac_parameter_parser import parse_time_window
 
 
 @mark.stac

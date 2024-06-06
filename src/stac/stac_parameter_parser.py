@@ -2,7 +2,6 @@ from typing import List
 from datetime import datetime
 from shapely.geometry import Polygon, mapping
 import rasterio
-
 import logging
 
 logger = logging.getLogger(__name__)
