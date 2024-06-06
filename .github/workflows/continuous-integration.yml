@@ -26,9 +26,6 @@ jobs:
             os: ubuntu-latest
             experimental: true
     steps:
-
-
-
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
@@ -42,13 +39,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: actions-rs/toolchain@v1
-        if: ${{ startsWith(matrix.python-version, "3.12")}}
-        with:
-          toolchain: stable
-          override: true
-          default: true
-          profile: minimal
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-test.txt
+          pip install -e ".[validation]"
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
@@ -59,17 +55,10 @@ jobs:
         run: ./scripts/test
         shell: bash
 
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements-test.txt
-          pip install -e ".[validation]"
-
       - name: Execute test suite
         run: ./scripts/test
         env:
           CHECK_COVERAGE: true
-
 
   lint:
     runs-on: ubuntu-latest
@@ -90,7 +79,6 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          # Cache based on OS, Python version, and dependency hash
           key: lint-${{ runner.os }}-python${{ matrix.python-version }}-${{ hashFiles("requirements-test.txt") }}
 
       - name: Install dependencies
