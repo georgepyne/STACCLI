@@ -45,13 +45,19 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get update
+          sudo apt-get install gdal-bin libgdal-dev
+          pip install GDAL==3.8.4
           pip install --upgrade pip
           pip install -r requirements-test.txt
           pip install -e ".[validation]"
 
       - name: Execute tests
-        run: ./scripts/test
-        shell: bash
+        run: |           
+          pip install pytest
+          pip install -r requirements-test.txt
+          pytest
 
 
   lint:
