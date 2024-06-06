@@ -80,5 +80,7 @@ jobs:
 
 
       - name: Linters and mypy type
-        run: pytest
+        run: |
+          pip install pytest
+          pytest
 
