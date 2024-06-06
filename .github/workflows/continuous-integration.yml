@@ -26,7 +26,15 @@ jobs:
             os: ubuntu-latest
             experimental: true
     steps:
+
+
+
       - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+              sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+              sudo apt-get update
+              sudo apt-get install gdal-bin libgdal-dev
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
