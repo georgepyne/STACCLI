@@ -57,7 +57,7 @@ jobs:
 
       - name: Execute tests
         run: |
-          pip install pytest
+          conda activate
           python -m pytest 
 
 #  lint:
