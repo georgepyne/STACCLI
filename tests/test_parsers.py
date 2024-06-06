@@ -3,12 +3,12 @@ import pytest
 from STACCLI.src.stac.stac_parameter_parser import parse_time_window, parse_bbox
 
 
-@mark.parser
+@mark.stac
 def test_time_parser():
     assert isinstance(parse_time_window("2024-04-22/2024-04-29"), str)
 
 
-# @mark.parser
+@mark.stac
 def test_bounds_parser():
     def test_bounds():
         bbox = [190, -100, 0, 0]
