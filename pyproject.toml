@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 
 dependencies = [
     "aiohttp==3.9.5",
-    "GDAL==3.8.5",
+    "GDAL==3.8.4",
     "OWSLib==0.30.0",
     "Shapely==2.0.4",
     "planetary-computer==1.0.0",
