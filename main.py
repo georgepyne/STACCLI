@@ -21,14 +21,18 @@ def main():
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     parser = argparse.ArgumentParser(
-        description="List STAC query longitude and latitude bounds: min_lon, min_lat, max_lat, max_lon"
+        description="A CLI tool to query the Microsoft Planetary Computer STAC API to generate a cloud optimized "
+                    "geotiff and STAC item metadate JSON from a provided collection, bounding box and time window"
     )
     # configure args
-    parser.add_argument("-b", "--bounds", type=str)
-    parser.add_argument("-t", "--time", type=str)
-    parser.add_argument("-c", "--collection", type=str)
-    parser.add_argument("-d", "--directory", type=str, default=os.getcwd())
-    parser.add_argument("-a", "--asset", type=str, default=os.getcwd())
+    parser.add_argument("-b", "--bounds", help="WGS84 Bounding box to query STAC in format: min_lon,min_lat,"
+                                               "max_lat,max_lon",
+                        type=str)
+    parser.add_argument("-t", "--time", help="Time window to query STAC in format: YYYY-MM-DD/YYYY-MM-DD ", type=str)
+    parser.add_argument("-c", "--collection", help="Collection id to query STAC.", type=str)
+    parser.add_argument("-d", "--directory", help="Directory to save cog and STAC meta JSON (default: current working "
+                                                  "directory)", type=str, default=os.getcwd())
+    parser.add_argument("-a", "--asset", help="Asset id to query STAC", type=str, default=os.getcwd())
 
     try:
         # parse args
@@ -41,7 +45,7 @@ def main():
 
         # Get STAC items
         items = query_planetary_computer_stac(time, bounds, collection_id)
-        if len(items['features']) == 0:
+        if len(items["features"]) == 0:
             logger.info(f"No STAC items found for: '{bounds}'\n'{time}'")
             sys.exit(0)
         ordered_features = order_stac(items)
@@ -65,7 +69,7 @@ def main():
 
         # clip cog
         shape = clip_cog(cogs, polygon, file_path, time, collection_id)
-        cloud_cover = (sum([i['properties']['landsat:cloud_cover_land'] for i in ordered_features])
+        cloud_cover = (sum([i["properties"]["landsat:cloud_cover_land"] for i in ordered_features])
                        / len(ordered_features))
 
         # create STAC item
