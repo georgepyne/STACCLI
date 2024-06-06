@@ -31,65 +31,22 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-#      - name: Install dependencies
-#        run: |
-#              sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-#              sudo apt-get update
-#              sudo apt-get install gdal-bin libgdal-dev
-#              pip install GDAL==3.8.4
-
-
       - uses: conda-incubator/setup-miniconda@v2
         with:
-#          activate-environment: stac
           channels: conda-forge,defaults
           channel-priority: true
           python-version: ${{ matrix.python-version }}
           auto-update-conda: true
-#          auto-activate-base: true
 
-
-      #      - name: Set up Python ${{ matrix.python-version }}
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: ${{ matrix.python-version }}
-
-      - name: Install conda packages
+      - name: Run tests
         shell: bash -l {0}
         run: |
           conda env create --name stac --file=environment-test.yml
           conda activate stac
           python -m pytest
-#          conda env update --file environment-test.yml --prune
 
-#      - name: Execute tests
-#        run: |
-#          conda env list
-#          conda activate stac
-#          python -m pytest
-
-#  lint:
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: true
-#      matrix:
-#        python-version:
-#          - "3.12.2"
-#    steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: Set up Python ${{ matrix.python-version }}
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: ${{ matrix.python-version }}
-#
-#
-#      - name: Linters and mypy type
-#        run: |
-#          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-#          sudo apt-get update
-#          sudo apt-get install gdal-bin libgdal-dev
-#          pip install pytest
-#          pip install -r requirements-test.txt
-#          pytest
+      - name: Linters and mypy type
+        run: |
+          pip install pre-commit
+          run: pre-commit run --all-files
 
