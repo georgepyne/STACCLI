@@ -59,12 +59,14 @@ jobs:
         run: |
           conda env create --name stac --file=environment-test.yml
           conda activate stac
+          python -m pytest
 #          conda env update --file environment-test.yml --prune
 
-      - name: Execute tests
-        run: |
-          conda activate stac
-          python -m pytest
+#      - name: Execute tests
+#        run: |
+#          conda env list
+#          conda activate stac
+#          python -m pytest
 
 #  lint:
 #    runs-on: ubuntu-latest
