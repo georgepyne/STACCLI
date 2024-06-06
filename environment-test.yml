@@ -83,7 +83,7 @@ dependencies:
   - giflib=5.2.2
   - glib=2.80.2
   - glib-tools=2.80.2
-  - gst-plugins-base.24.4
+#  - gst-plugins-base.24.4
   - gstreamer=1.24.4
   - hdf4=4.2.15
   - hdf5=1.14.3
