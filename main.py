@@ -55,6 +55,7 @@ def main():
                        })
     stac_items = json.dumps({"type": "FeatureCollection", "features": [item.to_dict()]})
     time = time.replace("/", "-")
+    print(f"Saving stac meta to: {file_path}/{time}.tif")
     with open(os.path.join(file_path, f"{time}.json"), "w", encoding="utf-8") as f:
         json.dump(stac_items, f, ensure_ascii=False, indent=4)
 
