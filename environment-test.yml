@@ -312,7 +312,7 @@ dependencies:
   - yaml=0.2.5=h1a28f6b_0
   - zeromq=4.3.5=h313beb8_0
   - zlib=1.2.13=hfb2fe0b_6
-  - zstd=1.5.6=hb46c0d2_0
+  - zstd=1.5.6
   - pip:
       - cligj==0.7.2
       - iniconfig==2.0.0
