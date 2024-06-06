@@ -27,9 +27,6 @@ jobs:
             os: ubuntu-latest
             experimental: true
     steps:
-
-
-
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
@@ -72,6 +69,5 @@ jobs:
       - name: Linters and mypy type
         run: |
           pip install pytest
-          pip install -r requirements-test.txt
           pytest
 
