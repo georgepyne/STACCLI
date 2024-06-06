@@ -55,15 +55,10 @@ jobs:
         shell: bash -l {0}
         run: |
           conda env update --file environment-test.yml --prune
-#          conda init
-          conda activate stac
-          python -m pytest 
 
-#      - name: Execute tests
-#        run: |
-#          conda init
-#          conda activate stac
-#          python -m pytest
+      - name: Execute tests
+        run: |
+          python -m pytest
 
 #  lint:
 #    runs-on: ubuntu-latest
