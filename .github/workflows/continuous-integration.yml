@@ -57,7 +57,7 @@ jobs:
       - name: Install conda packages
         shell: bash -l {0}
         run: |
-          conda env create --name stac --file=environments.yml
+          conda env create --name stac --file=environment-test.yml
           conda activate stac
 #          conda env update --file environment-test.yml --prune
 
