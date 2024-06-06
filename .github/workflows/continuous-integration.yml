@@ -63,6 +63,7 @@ jobs:
 
       - name: Execute tests
         run: |
+          conda activate stac
           python -m pytest
 
 #  lint:
