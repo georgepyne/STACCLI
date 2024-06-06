@@ -1,7 +1,7 @@
 from typing import List
 from datetime import datetime
-
-
+from shapely.geometry import Polygon, mapping
+import rasterio
 def parse_bbox(bounds: str) -> List[float]:
     try:
         bbox = list(map(float, bounds.split(",")))
@@ -43,3 +43,18 @@ def parse_time_window(time: str) -> str:
         raise e
 
     return time
+
+
+def get_bbox_and_footprint(raster: str):
+    with rasterio.open(raster) as r:
+        crs = r.crs
+        bounds = r.bounds
+        bbox = [bounds.left, bounds.bottom, bounds.right, bounds.top]
+        footprint = Polygon([
+            [bounds.left, bounds.bottom],
+            [bounds.left, bounds.top],
+            [bounds.right, bounds.top],
+            [bounds.right, bounds.bottom]
+        ])
+
+        return (bbox, mapping(footprint), crs)
