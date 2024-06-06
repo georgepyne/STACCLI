@@ -55,9 +55,15 @@ jobs:
         shell: bash -l {0}
         run: conda env update --file environment-test.yml --prune
 
+        with:
+          activate-environment: stac
+          channels: conda-forge,defaults
+          channel-priority: true
+          python-version: ${{ matrix.python-version }}
       - name: Execute tests
         run: |
-          pytest
+          
+          python pytest
 
 #  lint:
 #    runs-on: ubuntu-latest
