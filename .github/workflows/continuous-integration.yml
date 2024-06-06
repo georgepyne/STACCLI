@@ -41,12 +41,15 @@ jobs:
 
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: stac
+#          activate-environment: stac
           channels: conda-forge,defaults
           channel-priority: true
           python-version: ${{ matrix.python-version }}
+          auto-update-conda: true
+          auto-activate-base: true
 
-#      - name: Set up Python ${{ matrix.python-version }}
+
+      #      - name: Set up Python ${{ matrix.python-version }}
 #        uses: actions/setup-python@v2
 #        with:
 #          python-version: ${{ matrix.python-version }}
@@ -58,7 +61,6 @@ jobs:
 
       - name: Execute tests
         run: |
-          conda activate stac
           python -m pytest
 
 #  lint:
