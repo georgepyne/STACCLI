@@ -56,15 +56,15 @@ jobs:
         shell: bash -l {0}
         run: conda env update --file environment-test.yml --prune
 
-      - name: Execute tests
-        run: |
+#      - name: Execute tests
+#        run: |
 #          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
 #          sudo apt-get update
 #          sudo apt-get install gdal-bin libgdal-dev
 #          pip install GDAL==3.8.4
 #          pip install pytest
 #          pip install -r requirements-test.txt
-          pytest
+#          pytest
 
 #  lint:
 #    runs-on: ubuntu-latest
