@@ -58,7 +58,7 @@ jobs:
       - name: Execute tests
         run: |
           conda init
-          conda activate
+          conda activate stac
           python -m pytest 
 
 #  lint:
