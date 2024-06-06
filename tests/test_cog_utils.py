@@ -7,7 +7,7 @@ from rio_cogeo.profiles import cog_profiles
 import rasterio
 from pytest import mark
 @mark.cog
-def test_cog_create():
+def test_create_cog():
     bounds = [0, 0, 1, 1]  # Create cog bounds
 
     width = 2
