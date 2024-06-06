@@ -57,6 +57,7 @@ jobs:
 
       - name: Execute tests
         run: |
+          pip install pytest
           python -m pytest 
 
 #  lint:
