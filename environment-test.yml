@@ -43,7 +43,7 @@ dependencies:
   - bzip2=1.0.8
   - c-ares=1.28.1
   - ca-certificates=2024.6.2
-  - cairo=1.17.0
+#  - cairo=1.17.0
   - certifi=2024.6.2
   - cffi=1.16.0
   - cfitsio=4.4.0
@@ -144,7 +144,7 @@ dependencies:
   - libgettextpo=0.22.5
   - libgettextpo-devel=0.22.5
 #  - libgfortran=5.0.0
-  - libgfortran5=11.2.0
+#  - libgfortran5=11.2.0
   - libglib=2.80.2
   - libgoogle-cloud
   - libgoogle-cloud-storage=2.24.0
@@ -162,7 +162,7 @@ dependencies:
   - libnghttp2=1.58.0
   - libntlm=1.4
   - libogg=1.3.4
-  - libopenblas=0.3.23
+#  - libopenblas=0.3.23
   - libopus=1.3.1
   - libpng=1.6.43
   - libpq=16.3
@@ -181,10 +181,10 @@ dependencies:
   - libxml2=2.12.7
   - libzip=1.10.1
   - libzlib=1.2.13
-  - llvm-openmp=14.0.6
+#  - llvm-openmp=14.0.6
   - lz4-c=1.9.4
   - lzo=2.10
-  - macports-legacy-support=1.2.4
+#  - macports-legacy-support=1.2.4
   - mapclassify=2.5.0
   - markupsafe=2.1.3
   - matplotlib-base=3.8.4
@@ -221,11 +221,11 @@ dependencies:
   - pexpect=4.8.0
   - pillow=10.3.0
   - pip=24.0
-  - pixman=0.40.0
+#  - pixman=0.40.0
   - planetary-computer=1.0.0
   - platformdirs=3.10.0
   - ply=3.11
-  - poppler=24.04.0
+#  - poppler=24.04.0
   - poppler-data=0.4.12
   - postgresql=16.3
   - proj=9.4.0
