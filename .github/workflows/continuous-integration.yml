@@ -54,7 +54,7 @@ jobs:
 
       - name: Install conda packages
         shell: bash -l {0}
-        run: conda env update --file environment-test.yml --prune
+        run: conda env update --file environment-test.yml --prune -vv
 
       - name: Execute tests
         run: |
