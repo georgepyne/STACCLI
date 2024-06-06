@@ -43,13 +43,13 @@ dependencies:
   - bzip2=1.0.8
   - c-ares=1.28.1
   - ca-certificates=2024.6.2
-  - cairo=1.18.0
+  - cairo=1.17.0
   - certifi=2024.6.2
   - cffi=1.16.0
   - cfitsio=4.4.0
   - charset-normalizer=2.0.4
   - click=8.1.7
-  - click-plugins=1.1.1
+  - click-plugins=1.0.3
   - comm=0.2.1
   - contourpy=1.2.0
   - cycler=0.11.0
@@ -143,8 +143,8 @@ dependencies:
   - libgdal=3.8.5
   - libgettextpo=0.22.5
   - libgettextpo-devel=0.22.5
-  - libgfortran=5.0.0
-  - libgfortran5=13.2.0
+#  - libgfortran=5.0.0
+  - libgfortran5=11.2.0
   - libglib=2.80.2
   - libgoogle-cloud
   - libgoogle-cloud-storage=2.24.0
