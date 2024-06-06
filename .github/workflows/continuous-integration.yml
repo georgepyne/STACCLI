@@ -68,6 +68,10 @@ jobs:
 
       - name: Linters and mypy type
         run: |
+          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get update
+          sudo apt-get install gdal-bin libgdal-dev
           pip install pytest
+          pip install -r requirements-test.txt
           pytest
 
