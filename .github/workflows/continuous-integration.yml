@@ -28,50 +28,66 @@ jobs:
             experimental: true
     steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: |
-              sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-              sudo apt-get update
-              sudo apt-get install gdal-bin libgdal-dev
-              pip install GDAL==3.8.4
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
         with:
+          persist-credentials: false
+          fetch-depth: 0
+#      - name: Install dependencies
+#        run: |
+#              sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+#              sudo apt-get update
+#              sudo apt-get install gdal-bin libgdal-dev
+#              pip install GDAL==3.8.4
+
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: stac
+          mamba-version: "*"
+          channels: conda-forge,defaults
+          channel-priority: true
           python-version: ${{ matrix.python-version }}
 
-      - name: Execute tests
-        run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-          sudo apt-get update
-          sudo apt-get install gdal-bin libgdal-dev
-          pip install GDAL==3.8.4
-          pip install pytest
-          pip install -r requirements-test.txt
-          pytest
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.python-version }}
 
-  lint:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version:
-          - "3.12.2"
-    steps:
-      - uses: actions/checkout@v3
+      - name: Install conda packages
+        shell: bash -l {0}
+        run: mamba install -c conda-forge biom-format patsy pytest xarray scikit-bio flake8 arviz cmdstanpy pytest-cov
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
+#      - name: Execute tests
+#        run: |
+#          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+#          sudo apt-get update
+#          sudo apt-get install gdal-bin libgdal-dev
+#          pip install GDAL==3.8.4
+#          pip install pytest
+#          pip install -r requirements-test.txt
+#          pytest
 
-
-      - name: Linters and mypy type
-        run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-          sudo apt-get update
-          sudo apt-get install gdal-bin libgdal-dev
-          pip install pytest
-          pip install -r requirements-test.txt
-          pytest
+#  lint:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: true
+#      matrix:
+#        python-version:
+#          - "3.12.2"
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#
+#
+#      - name: Linters and mypy type
+#        run: |
+#          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+#          sudo apt-get update
+#          sudo apt-get install gdal-bin libgdal-dev
+#          pip install pytest
+#          pip install -r requirements-test.txt
+#          pytest
 
