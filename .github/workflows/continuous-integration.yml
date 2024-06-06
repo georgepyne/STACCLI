@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - stac-cli
   pull_request:
     branches:
       - main
@@ -27,6 +26,9 @@ jobs:
             os: ubuntu-latest
             experimental: true
     steps:
+
+
+
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
@@ -46,20 +48,17 @@ jobs:
           pip install -r requirements-test.txt
           pip install -e ".[validation]"
 
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements-test.txt
-          pip install -e ".[validation]"
-
       - name: Execute test suite
         run: ./scripts/test
         shell: bash
+
+
 
       - name: Execute test suite
         run: ./scripts/test
         env:
           CHECK_COVERAGE: true
+
 
   lint:
     runs-on: ubuntu-latest
@@ -76,16 +75,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: lint-${{ runner.os }}-python${{ matrix.python-version }}-${{ hashFiles("requirements-test.txt") }}
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements-test.txt
 
       - name: Linters and mypy type
         run: pre-commit run --all-files
