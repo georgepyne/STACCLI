@@ -48,5 +48,5 @@ jobs:
       - name: Linters and mypy type
         run: |
           pip install pre-commit
-          re-commit run --all-files
+          pre-commit run --all-files
 
