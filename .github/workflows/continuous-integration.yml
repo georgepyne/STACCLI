@@ -57,6 +57,7 @@ jobs:
 
       - name: Execute tests
         run: |
+          conda init
           conda activate
           python -m pytest 
 
