@@ -82,5 +82,6 @@ jobs:
       - name: Linters and mypy type
         run: |
           pip install pytest
+          pip install -r requirements-test.txt
           pytest
 
