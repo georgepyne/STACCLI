@@ -80,5 +80,5 @@ jobs:
 
 
       - name: Linters and mypy type
-        run: python pytest
+        run: pytest
 
