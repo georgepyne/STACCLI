@@ -1,9 +1,11 @@
-import pystac_client
-import planetary_computer
-from typing import List
 import logging
+from typing import List
+
+import planetary_computer
+import pystac_client
 
 logger = logging.getLogger(__name__)
+
 
 def query_planetary_computer_stac(
     time: str, bounds: List[float], collection_id: str

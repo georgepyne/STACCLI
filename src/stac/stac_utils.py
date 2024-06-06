@@ -1,8 +1,9 @@
+import logging
+from typing import Dict, Iterable, List, Union
+
 import geopandas as gpd
 import pandas as pd
-from typing import List, Dict, Iterable, Union
 import rasterio
-import logging
 from shapely.geometry import Polygon, mapping
 
 logger = logging.getLogger(__name__)
@@ -26,11 +27,13 @@ def get_bbox_and_footprint(raster: str) -> Iterable[Union[List[float], Polygon, 
         crs = r.crs
         bounds = r.bounds
         bbox = [bounds.left, bounds.bottom, bounds.right, bounds.top]
-        footprint = Polygon([
-            [bounds.left, bounds.bottom],
-            [bounds.left, bounds.top],
-            [bounds.right, bounds.top],
-            [bounds.right, bounds.bottom]
-        ])
+        footprint = Polygon(
+            [
+                [bounds.left, bounds.bottom],
+                [bounds.left, bounds.top],
+                [bounds.right, bounds.top],
+                [bounds.right, bounds.bottom],
+            ]
+        )
 
         return bbox, mapping(footprint), crs

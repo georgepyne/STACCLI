@@ -1,18 +1,19 @@
 import argparse
-from src.stac.planetary_computer_client import query_planetary_computer_stac
-from src.stac.stac_parameter_parser import parse_time_window, parse_bbox
-from src.stac.stac_utils import order_stac, get_bbox_and_footprint
-from src.cog.cog_utils import merge_cogs, clip_cog
-import rasterio
-from shapely.geometry import box
-import pystac
-from pyproj import Transformer
-from datetime import datetime
 import json
-import os
 import logging
+import os
 import sys
+from datetime import datetime
 
+import pystac
+import rasterio
+from pyproj import Transformer
+from shapely.geometry import box
+
+from src.cog.cog_utils import clip_cog, merge_cogs
+from src.stac.planetary_computer import query_planetary_computer_stac
+from src.stac.stac_parameter_parser import parse_bbox, parse_time_window
+from src.stac.stac_utils import get_bbox_and_footprint, order_stac
 
 my_logger = logging.getLogger(__name__)
 
@@ -22,17 +23,36 @@ def main():
     logger.setLevel(logging.INFO)
     parser = argparse.ArgumentParser(
         description="A CLI tool to query the Microsoft Planetary Computer STAC API to generate a cloud optimized "
-                    "geotiff and STAC item metadate JSON from a provided collection, bounding box and time window"
+        "geotiff and STAC item metadate JSON from a provided collection, bounding box and time window"
     )
     # configure args
-    parser.add_argument("-b", "--bounds", help="WGS84 Bounding box to query STAC in format: min_lon,min_lat,"
-                                               "max_lat,max_lon",
-                        type=str)
-    parser.add_argument("-t", "--time", help="Time window to query STAC in format: YYYY-MM-DD/YYYY-MM-DD ", type=str)
-    parser.add_argument("-c", "--collection", help="Collection id to query STAC.", type=str)
-    parser.add_argument("-d", "--directory", help="Directory to save cog and STAC meta JSON (default: current working "
-                                                  "directory)", type=str, default=os.getcwd())
-    parser.add_argument("-a", "--asset", help="Asset id to query STAC", type=str, default=os.getcwd())
+    parser.add_argument(
+        "-b",
+        "--bounds",
+        help="WGS84 Bounding box to query STAC in format: min_lon,min_lat,"
+        "max_lat,max_lon",
+        type=str,
+    )
+    parser.add_argument(
+        "-t",
+        "--time",
+        help="Time window to query STAC in format: YYYY-MM-DD/YYYY-MM-DD ",
+        type=str,
+    )
+    parser.add_argument(
+        "-c", "--collection", help="Collection id to query STAC.", type=str
+    )
+    parser.add_argument(
+        "-d",
+        "--directory",
+        help="Directory to save cog and STAC meta JSON (default: current working "
+        "directory)",
+        type=str,
+        default=os.getcwd(),
+    )
+    parser.add_argument(
+        "-a", "--asset", help="Asset id to query STAC", type=str, default=os.getcwd()
+    )
 
     try:
         # parse args
@@ -55,7 +75,9 @@ def main():
         cogs = [rasterio.open(i) for i in cog_urls]
 
         # reproject bounds
-        epsg = items["features"][0]["properties"]["proj:epsg"]  # get EPSG code from STAC meta
+        epsg = items["features"][0]["properties"][
+            "proj:epsg"
+        ]  # get EPSG code from STAC meta
         transformer = Transformer.from_crs(4326, epsg)
 
         # merge cogs
@@ -64,28 +86,42 @@ def main():
 
         # transform bbox
         left, bottom, right, top = bounds
-        left, bottom, right, top = list(sum([i for i in transformer.itransform([(bottom, left), (top, right)])], ()))
+        left, bottom, right, top = list(
+            sum([i for i in transformer.itransform([(bottom, left), (top, right)])], ())
+        )
         polygon = box(*[left, bottom, right, top])
 
         # clip cog
         shape = clip_cog(cogs, polygon, file_path, time, collection_id)
-        cloud_cover = (sum([i["properties"]["landsat:cloud_cover_land"] for i in ordered_features])
-                       / len(ordered_features))
+        cloud_cover = sum(
+            [i["properties"]["landsat:cloud_cover_land"] for i in ordered_features]
+        ) / len(ordered_features)
 
         # create STAC item
-        bbox, footprint, crs = get_bbox_and_footprint(os.path.join(file_path, f"{collection_id}_{time}.tif"))
-        item = pystac.Item(id=f"{collection_id}_{time}",
-                           geometry=footprint,
-                           bbox=bbox,
-                           datetime=datetime.utcnow(),
-                           properties={
-                               "proj:shape": shape,
-                               "proj:epsg": epsg,
-                               "eo:agg_cloud_cover": cloud_cover,
-                           })
-        stac_items = json.dumps({"type": "FeatureCollection", "features": [item.to_dict()]},
-                                ensure_ascii=False, indent=4)
-        with open(os.path.join(file_path, f"{collection_id}_{time}.json"), "w", encoding="utf-8") as f:
+        bbox, footprint, crs = get_bbox_and_footprint(
+            os.path.join(file_path, f"{collection_id}_{time}.tif")
+        )
+        item = pystac.Item(
+            id=f"{collection_id}_{time}",
+            geometry=footprint,
+            bbox=bbox,
+            datetime=datetime.utcnow(),
+            properties={
+                "proj:shape": shape,
+                "proj:epsg": epsg,
+                "eo:agg_cloud_cover": cloud_cover,
+            },
+        )
+        stac_items = json.dumps(
+            {"type": "FeatureCollection", "features": [item.to_dict()]},
+            ensure_ascii=False,
+            indent=4,
+        )
+        with open(
+            os.path.join(file_path, f"{collection_id}_{time}.json"),
+            "w",
+            encoding="utf-8",
+        ) as f:
             f.write(stac_items)
 
         sys.exit(0)

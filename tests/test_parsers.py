@@ -1,6 +1,7 @@
-from pytest import mark
 import pytest
-from STACCLI.src.stac.stac_parameter_parser import parse_time_window
+from pytest import mark
+
+from ..src.stac.stac_parameter_parser import parse_time_window
 
 
 @mark.stac
@@ -13,16 +14,16 @@ def test_bounds_parser():
     def test_bounds():
         bbox = [190, -100, 0, 0]
         if any(
-                [
-                    ((bbox[0] < -180) | (bbox[0] > 180)),
-                    ((bbox[1] < -90) | (bbox[1] > 90)),
-                    ((bbox[2] < -180) | (bbox[2] > 180)),
-                    ((bbox[3] < -90) | (bbox[3] > 90)),
-                ]
+            [
+                ((bbox[0] < -180) | (bbox[0] > 180)),
+                ((bbox[1] < -90) | (bbox[1] > 90)),
+                ((bbox[2] < -180) | (bbox[2] > 180)),
+                ((bbox[3] < -90) | (bbox[3] > 90)),
+            ]
         ):
             raise ValueError(
-                "Provided bounds are invalid. Bounds must be valid WGS84 coordinates.")
+                "Provided bounds are invalid. Bounds must be valid WGS84 coordinates."
+            )
 
     with pytest.raises(ValueError):
         test_bounds()
-
