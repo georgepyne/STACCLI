@@ -57,7 +57,7 @@ jobs:
 
       - name: Execute tests
         run: |
-          python pytest
+          python -m pytest 
 
 #  lint:
 #    runs-on: ubuntu-latest
