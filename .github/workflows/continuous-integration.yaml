@@ -47,7 +47,6 @@ jobs:
       - name: Run tests
         shell: bash -l {0}
         run: |
-          conda env create --name stac --file=environment-test.yaml
           conda activate stac
           python -m pytest
 
