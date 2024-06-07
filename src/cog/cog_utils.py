@@ -19,7 +19,7 @@ def merge_cogs(
 ) -> None:
     logger.setLevel(logging.INFO)
     time = time.replace("/", "_")
-    logger.info("Merging tifs.")
+    logger.info("Merging cogs.")
     merged, cog_transform = merge(cogs)
     out_meta = cogs[0].meta.copy()
     out_meta.update(
@@ -44,10 +44,10 @@ def clip_cog(
     collection_id: str,
 ) -> Dict[int, int]:
     geojson_feature = geojson.Feature(geometry=polygon, properties={})
-    gt = rasterio.open(os.path.join(path, f"{collection_id}_{time}.tif"))
-    print("Clipping raster.")
+    cog = rasterio.open(os.path.join(path, f"{collection_id}_{time}.tif"))
+    logger.info("Clipping raster.")
     clipped, clip_transform = mask(
-        gt, shapes=[dict(geojson_feature["geometry"])], crop=True
+        cog, shapes=[dict(geojson_feature["geometry"])], crop=True
     )
     out_meta = cogs[0].meta.copy()
     out_meta.update(
@@ -68,7 +68,7 @@ def clip_cog(
     )
 
     with rasterio.open(
-        os.path.join(path, f"{collection_id}_{time}"),
+        os.path.join(path, f"{collection_id}_{time}.tif"),
         "w",
         **out_meta,
     ) as cog:
@@ -76,12 +76,12 @@ def clip_cog(
         cog.close()
 
     with rasterio.open(
-        os.path.join(path, f"{collection_id}_{time}"), "r", **src_profile
+        os.path.join(path, f"{collection_id}_{time}.tif"), "r", **src_profile
     ) as cog:
         dst_profile = cog_profiles.get("deflate")
         cog_translate(
             cog,
-            os.path.join(path, f"{collection_id}_{time}"),
+            os.path.join(path, f"{collection_id}_{time}.tif"),
             dst_profile,
             in_memory=True,
             quiet=True,

@@ -28,7 +28,7 @@ def parse_bbox(bounds: str) -> List[float]:
                 "Provided bounds are invalid. Bounds must be valid WGS84 coordinates."
             )
     except ValueError as e:
-        # log.error(ValueError)
+        logger.error(e)
         raise e
 
     return bbox
@@ -45,8 +45,8 @@ def parse_time_window(time: str) -> str:
         [datetime.strptime(t, date_format) for t in time_window]  # ValueError
 
     except ValueError as e:
-        # log.error(ValueError)
-        raise e
+        logger.error(e)
+        raise ValueError("Invalid time window provided. Time window must be format: 'YYYY-MM-DD/YYYY-MM-DD'")
 
     return time
 

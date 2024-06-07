@@ -44,14 +44,20 @@ jobs:
           conda env create --name stac --file=environment-test.yaml
           conda activate stac
 
-      - name: Run tests
+      - name: Linters and mypy type
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files
+
+      - name: Run test suite
         shell: bash -l {0}
         run: |
           conda activate stac
           python -m pytest
 
-      - name: Linters and mypy type
+      - name: Run and test CLI
+        shell: bash -l {0}
         run: |
-          pip install pre-commit
-          pre-commit run --all-files
+          conda activate stac
+          python main.py -b=10.251789,48.268455,10.511341,48.366400 -t=2023-04-20/2023-04-23 -c=landsat-c2-l2 -a=red
 

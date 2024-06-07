@@ -4,22 +4,19 @@ import logging
 import os
 import sys
 from datetime import datetime
-
 import pystac
 import rasterio
 from pyproj import Transformer
 from shapely.geometry import box
-
 from src.cog.cog_utils import clip_cog, merge_cogs
 from src.stac.planetary_computer import query_planetary_computer_stac
 from src.stac.stac_parameter_parser import parse_bbox, parse_time_window
 from src.stac.stac_utils import get_bbox_and_footprint, order_stac
 
-my_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def main() -> None:
-    logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     parser = argparse.ArgumentParser(
         description="A CLI tool to query the Microsoft Planetary Computer STAC API to generate a cloud optimized "
@@ -93,7 +90,7 @@ def main() -> None:
 
         # clip cog
         shape = clip_cog(cogs, polygon, file_path, time, collection_id)
-        cloud_cover = sum(
+        agg_cloud_cover = sum(
             [i["properties"]["landsat:cloud_cover_land"] for i in ordered_features]
         ) / len(ordered_features)
 
@@ -109,12 +106,11 @@ def main() -> None:
             properties={
                 "proj:shape": shape,
                 "proj:epsg": epsg,
-                "eo:agg_cloud_cover": cloud_cover,
+                "eo:agg_cloud_cover": agg_cloud_cover,
             },
         )
         stac_items = json.dumps(
             {"type": "FeatureCollection", "features": [item.to_dict()]},
-            ensure_ascii=False,
             indent=4,
         )
         with open(
@@ -129,7 +125,7 @@ def main() -> None:
         logger.error(e)
         sys.exit(0)
     except Exception as e:
-        logger.error("Application error:")
+        logger.error("STAC-CLI error:")
         logger.error(e)
         sys.exit(1)
 
