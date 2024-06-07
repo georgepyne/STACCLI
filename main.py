@@ -18,7 +18,7 @@ from src.stac.stac_utils import get_bbox_and_footprint, order_stac
 my_logger = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     parser = argparse.ArgumentParser(

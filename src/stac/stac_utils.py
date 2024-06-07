@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Iterable, List, Union
+from typing import Any, Dict, Iterable, List, Union
 
 import geopandas as gpd
 import pandas as pd
@@ -9,7 +9,7 @@ from shapely.geometry import Polygon, mapping
 logger = logging.getLogger(__name__)
 
 
-def order_stac(items: dict) -> List[Dict]:
+def order_stac(items: Dict[str, Any]) -> List[Dict[str, Any]]:
     stac_meta = gpd.GeoDataFrame.from_features(items, crs="epsg:4326")
     stac_meta["datetime"] = pd.to_datetime(stac_meta["datetime"], format="ISO8601")
     stac_meta = stac_meta.sort_values(

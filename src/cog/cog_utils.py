@@ -42,7 +42,7 @@ def clip_cog(
     path: str,
     time: str,
     collection_id: str,
-) -> Dict:
+) -> Dict[int, int]:
     geojson_feature = geojson.Feature(geometry=polygon, properties={})
     gt = rasterio.open(os.path.join(path, f"{collection_id}_{time}.tif"))
     print("Clipping raster.")

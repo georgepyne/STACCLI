@@ -9,7 +9,7 @@ from rio_cogeo.profiles import cog_profiles
 
 
 @mark.cog
-def test_create_cog():
+def test_create_cog() -> None:
     bounds = [0, 0, 1, 1]  # Create cog bounds
     width = 2
     height = 2

@@ -5,13 +5,13 @@ from ..src.stac.stac_parameter_parser import parse_time_window
 
 
 @mark.stac
-def test_time_parser():
+def test_time_parser() -> None:
     assert isinstance(parse_time_window("2024-04-22/2024-04-29"), str)
 
 
 @mark.stac
-def test_bounds_parser():
-    def test_bounds():
+def test_bounds_parser() -> None:
+    def test_bounds() -> None:
         bbox = [190, -100, 0, 0]
         if any(
             [
