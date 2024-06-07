@@ -46,7 +46,9 @@ def parse_time_window(time: str) -> str:
 
     except ValueError as e:
         logger.error(e)
-        raise ValueError("Invalid time window provided. Time window must be format: 'YYYY-MM-DD/YYYY-MM-DD'")
+        raise ValueError(
+            "Invalid time window provided. Time window must be format: 'YYYY-MM-DD/YYYY-MM-DD'"
+        )
 
     return time
 

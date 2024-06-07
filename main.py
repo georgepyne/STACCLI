@@ -4,10 +4,12 @@ import logging
 import os
 import sys
 from datetime import datetime
+
 import pystac
 import rasterio
 from pyproj import Transformer
 from shapely.geometry import box
+
 from src.cog.cog_utils import clip_cog, merge_cogs
 from src.stac.planetary_computer import query_planetary_computer_stac
 from src.stac.stac_parameter_parser import parse_bbox, parse_time_window
