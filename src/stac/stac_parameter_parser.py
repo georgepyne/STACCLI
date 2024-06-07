@@ -1,9 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Any, Dict, List
-
-import rasterio
-from shapely.geometry import Polygon, mapping
+from typing import List
 
 logger = logging.getLogger(__name__)
 
@@ -51,20 +48,3 @@ def parse_time_window(time: str) -> str:
         )
 
     return time
-
-
-def get_bbox_and_footprint(raster: str) -> tuple[list[Any], Dict[str, Any], Any]:
-    with rasterio.open(raster) as r:
-        crs = r.crs
-        bounds = r.bounds
-        bbox = [bounds.left, bounds.bottom, bounds.right, bounds.top]
-        footprint = Polygon(
-            [
-                [bounds.left, bounds.bottom],
-                [bounds.left, bounds.top],
-                [bounds.right, bounds.top],
-                [bounds.right, bounds.bottom],
-            ]
-        )
-
-        return bbox, mapping(footprint), crs

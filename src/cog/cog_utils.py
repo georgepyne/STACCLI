@@ -47,7 +47,7 @@ def clip_cog(
     cog = rasterio.open(os.path.join(path, f"{collection_id}_{time}.tif"))
     logger.info("Clipping raster.")
     clipped, clip_transform = mask(
-        cog, shapes=[dict(geojson_feature["geometry"])], crop=True
+        cog, shapes=[dict(geojson_feature["geometry"])], crop=True, pad=True
     )
     out_meta = cogs[0].meta.copy()
     out_meta.update(

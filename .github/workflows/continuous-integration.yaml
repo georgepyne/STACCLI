@@ -44,7 +44,7 @@ jobs:
           conda env create --name stac --file=environment-test.yaml
           conda activate stac
 
-      - name: Linters and mypy type
+      - name: Lint
         run: |
           pip install pre-commit
           pre-commit run --all-files

@@ -1,19 +1,17 @@
 import argparse
-import json
 import logging
 import os
 import sys
-from datetime import datetime
+from typing import List, cast
 
-import pystac
-import rasterio
 from pyproj import Transformer
+from rasterio import open as rasterio_open
 from shapely.geometry import box
 
 from src.cog.cog_utils import clip_cog, merge_cogs
 from src.stac.planetary_computer import query_planetary_computer_stac
 from src.stac.stac_parameter_parser import parse_bbox, parse_time_window
-from src.stac.stac_utils import get_bbox_and_footprint, order_stac
+from src.stac.stac_utils import get_bbox_and_footprint, order_stac, write_stac_meta
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +47,7 @@ def main() -> None:
         type=str,
         default=os.getcwd(),
     )
-    parser.add_argument(
-        "-a", "--asset", help="Asset id to query STAC", type=str, default=os.getcwd()
-    )
+    parser.add_argument("-a", "--asset", help="Asset id to query STAC", type=str)
 
     try:
         # parse args
@@ -62,16 +58,24 @@ def main() -> None:
         file_path = args.directory
         asset = args.asset
 
+        if not os.path.exists(file_path):
+            logger.exception(f"No such directory: {file_path}")
+            sys.exit(0)
+
         # Get STAC items
         items = query_planetary_computer_stac(time, bounds, collection_id)
         if len(items["features"]) == 0:
-            logger.info(f"No STAC items found for: '{bounds}'\n'{time}'")
+            logger.info(
+                f"No STAC items found for collection '{collection_id}':'{bounds}'\n'{time}'"
+            )
             sys.exit(0)
+
+        # order by cloud cover
         ordered_features = order_stac(items)
 
         # open cogs
         cog_urls = [i["assets"][asset]["href"] for i in ordered_features]
-        cogs = [rasterio.open(i) for i in cog_urls]
+        cogs = [rasterio_open(i) for i in cog_urls]
 
         # reproject bounds
         epsg = items["features"][0]["properties"][
@@ -92,39 +96,28 @@ def main() -> None:
 
         # clip cog
         shape = clip_cog(cogs, polygon, file_path, time, collection_id)
+
+        # create STAC item
         agg_cloud_cover = sum(
             [i["properties"]["landsat:cloud_cover_land"] for i in ordered_features]
         ) / len(ordered_features)
-
-        # create STAC item
         bbox, footprint, crs = get_bbox_and_footprint(
             os.path.join(file_path, f"{collection_id}_{time}.tif")
         )
-        item = pystac.Item(
-            id=f"{collection_id}_{time}",
-            geometry=footprint,
-            bbox=bbox,
-            datetime=datetime.utcnow(),
-            properties={
-                "proj:shape": shape,
-                "proj:epsg": epsg,
-                "eo:agg_cloud_cover": agg_cloud_cover,
-            },
-        )
-        stac_items = json.dumps(
-            {"type": "FeatureCollection", "features": [item.to_dict()]},
-            indent=4,
-        )
-        with open(
-            os.path.join(file_path, f"{collection_id}_{time}.json"),
-            "w",
-            encoding="utf-8",
-        ) as f:
-            f.write(stac_items)
 
+        write_stac_meta(
+            file_path,
+            time,
+            collection_id,
+            footprint,
+            cast(List[float], bbox),
+            epsg,
+            shape,
+            agg_cloud_cover,
+        )
         sys.exit(0)
     except ValueError as e:
-        logger.error(e)
+        print(e)
         sys.exit(0)
     except Exception as e:
         logger.error("STAC-CLI error:")
