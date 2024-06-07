@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - stac-cli
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    name: test
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version:
+          - "3.12.2"
+        os:
+          - ubuntu-latest
+        experimental:
+          - false
+        include:
+          - python-version: "3.12.2"
+            os: ubuntu-latest
+            experimental: true
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          channels: conda-forge,defaults
+          channel-priority: true
+          python-version: ${{ matrix.python-version }}
+          auto-update-conda: true
+
+      - name: Run tests
+        shell: bash -l {0}
+        run: |
+          conda env create --name stac --file=environment-test.yaml
+          conda activate stac
+          python -m pytest
+
+      - name: Linters and mypy type
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files
+

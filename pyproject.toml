@@ -2,17 +2,10 @@
 name = "rgb"
 version = "0.1.0"
 requires-python = ">=3.12"
+dynamic = ["dependencies"]
 
-dependencies = [
-    "aiohttp==3.9.5",
-    "GDAL==3.8.5",
-    "OWSLib==0.30.0",
-    "Shapely==2.0.4",
-    "planetary-computer==1.0.0",
-    "pyproj==3.6.1",
-    "pystac-client==0.7.7",
-    "requests==2.31.0"
-]
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
 
 [project.optional-dependencies]
 dev = [
@@ -28,3 +21,14 @@ extend-select = ["I"]
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.mypy]
+mypy_path = "STACCLI.src"
+explicit_package_bases = true
+namespace_packages = true
+show_error_codes = true
+strict = true
+warn_return_any = true
+#warn_unused_configs = True
+disallow_untyped_decorators = "False"
+

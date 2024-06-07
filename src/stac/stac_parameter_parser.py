@@ -1,9 +1,9 @@
-from typing import List
-from datetime import datetime
-from shapely.geometry import Polygon, mapping
-import rasterio
-
 import logging
+from datetime import datetime
+from typing import Any, Dict, List
+
+import rasterio
+from shapely.geometry import Polygon, mapping
 
 logger = logging.getLogger(__name__)
 
@@ -17,12 +17,12 @@ def parse_bbox(bounds: str) -> List[float]:
             )
 
         if any(
-                [
-                    ((bbox[0] < -180) | (bbox[0] > 180)),
-                    ((bbox[1] < -90) | (bbox[1] > 90)),
-                    ((bbox[2] < -180) | (bbox[2] > 180)),
-                    ((bbox[3] < -90) | (bbox[3] > 90)),
-                ]
+            [
+                ((bbox[0] < -180) | (bbox[0] > 180)),
+                ((bbox[1] < -90) | (bbox[1] > 90)),
+                ((bbox[2] < -180) | (bbox[2] > 180)),
+                ((bbox[3] < -90) | (bbox[3] > 90)),
+            ]
         ):
             raise ValueError(
                 "Provided bounds are invalid. Bounds must be valid WGS84 coordinates."
@@ -51,16 +51,18 @@ def parse_time_window(time: str) -> str:
     return time
 
 
-def get_bbox_and_footprint(raster: str):
+def get_bbox_and_footprint(raster: str) -> tuple[list[Any], Dict[str, Any], Any]:
     with rasterio.open(raster) as r:
         crs = r.crs
         bounds = r.bounds
         bbox = [bounds.left, bounds.bottom, bounds.right, bounds.top]
-        footprint = Polygon([
-            [bounds.left, bounds.bottom],
-            [bounds.left, bounds.top],
-            [bounds.right, bounds.top],
-            [bounds.right, bounds.bottom]
-        ])
+        footprint = Polygon(
+            [
+                [bounds.left, bounds.bottom],
+                [bounds.left, bounds.top],
+                [bounds.right, bounds.top],
+                [bounds.right, bounds.bottom],
+            ]
+        )
 
-        return (bbox, mapping(footprint), crs)
+        return bbox, mapping(footprint), crs

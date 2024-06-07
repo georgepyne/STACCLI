@@ -1,15 +1,16 @@
 import numpy as np
+import rasterio
 from osgeo_utils.samples import validate_cloud_optimized_geotiff
+from pytest import mark
 from rasterio.io import MemoryFile
 from rasterio.transform import from_origin
 from rio_cogeo.cogeo import cog_translate
 from rio_cogeo.profiles import cog_profiles
-import rasterio
-from pytest import mark
-@mark.cog
-def test_create_cog():
-    bounds = [0, 0, 1, 1]  # Create cog bounds
 
+
+@mark.cog
+def test_create_cog() -> None:
+    bounds = [0, 0, 1, 1]  # Create cog bounds
     width = 2
     height = 2
     nbands = 1
@@ -41,6 +42,6 @@ def test_create_cog():
             )
             mem.close()
         with rasterio.open(mem.name) as dataset:
+            validate_cloud_optimized_geotiff.validate(mem.name)
             read_array = dataset.read()[0]
-            v = validate_cloud_optimized_geotiff.validate(mem.name)  # cog validate
             assert np.array_equal(raster_array, read_array)  # validate cog read
