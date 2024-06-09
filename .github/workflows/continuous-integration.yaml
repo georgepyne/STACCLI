@@ -38,26 +38,44 @@ jobs:
           python-version: ${{ matrix.python-version }}
           auto-update-conda: true
 
+      - name: Lint & mypy types
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files
+
       - name: Install dependencies
         shell: bash -l {0}
         run: |
           conda env create --name stac --file=environment-test.yaml
           conda activate stac
 
-      - name: Lint
-        run: |
-          pip install pre-commit
-          pre-commit run --all-files
-
-      - name: Run test suite
+      - name: Run unit tests
         shell: bash -l {0}
         run: |
           conda activate stac
-          python -m pytest
+          pytest -m stac
+          pytes -m cog
 
-      - name: Run and test CLI
+#      - name: Coverage tests
+
+      - name: Run integration tests
+        shell: bash -l {0}
+        run: |
+          conda activate stac
+          pytest -m integration
+
+      - name: Run smoke tests
         shell: bash -l {0}
         run: |
           conda activate stac
           python main.py -b=10.251789,48.268455,10.511341,48.366400 -t=2023-04-20/2023-04-23 -c=landsat-c2-l2 -a=red
+
+      - name: Run E2E tests
+        shell: bash -l {0}
+        run: |
+          conda activate stac
+          python main.py -b=10.251789,48.268455,10.511341,48.366400 -t=2023-04-20/2023-04-23 -c=landsat-c2-l2 -a=red
+          tifpath=$(realpath landsat-c2-2023-04-20-2023-04-23.tif)
+          rio cogeo validate $tifpath
+          curl --header "Content-Type: application/json" --request POST --data '{"stac_file":"$stacitem"}' https://ojiwewqzbl.execute-api.us-west-2.amazonaws.com/prod/
 

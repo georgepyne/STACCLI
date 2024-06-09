@@ -27,7 +27,7 @@ def main() -> None:
         "-b",
         "--bounds",
         help="WGS84 Bounding box to query STAC in format: min_lon,min_lat,"
-        "max_lat,max_lon",
+        "max_lon,max_lat",
         type=str,
     )
     parser.add_argument(
@@ -65,8 +65,8 @@ def main() -> None:
         # Get STAC items
         items = query_planetary_computer_stac(time, bounds, collection_id)
         if len(items["features"]) == 0:
-            logger.info(
-                f"No STAC items found for collection '{collection_id}':'{bounds}'\n'{time}'"
+            logger.warning(
+                f"No STAC items found for collection '{collection_id}':\n'{asset}'\n'{bounds}'\n'{time}'"
             )
             sys.exit(0)
 
@@ -118,7 +118,7 @@ def main() -> None:
         sys.exit(0)
     except ValueError as e:
         print(e)
-        sys.exit(0)
+        sys.exit(1)
     except Exception as e:
         logger.error("STAC-CLI error:")
         logger.error(e)

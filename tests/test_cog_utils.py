@@ -77,6 +77,6 @@ def test_create_cog() -> None:
             )
             mem.close()
         with rasterio.open(mem.name) as dataset:
-            validate_cloud_optimized_geotiff.validate(mem.name)
+            validate_cloud_optimized_geotiff.validate(mem.name, full_check=True)
             read_array = dataset.read()[0]
             assert np.array_equal(raster_array, read_array)  # validate cog read
