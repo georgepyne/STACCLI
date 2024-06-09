@@ -1,9 +1,13 @@
+import json
 import logging
-from typing import Any, Dict, Iterable, List, Union
+import os
+from datetime import datetime
+from typing import Any, Dict, Iterable, List, Union, cast
 
 import geopandas as gpd
 import pandas as pd
 import rasterio
+from pystac import Item
 from shapely.geometry import Polygon, mapping
 
 logger = logging.getLogger(__name__)
@@ -36,4 +40,37 @@ def get_bbox_and_footprint(raster: str) -> Iterable[Union[List[float], Polygon, 
             ]
         )
 
-        return bbox, mapping(footprint), crs
+        return cast(List[int], bbox), mapping(footprint), crs
+
+
+def write_stac_meta(
+    file_path: str,
+    time: str,
+    collection_id: str,
+    footprint: Polygon,
+    bbox: List[float],
+    epsg: str,
+    shape: Dict[int, int],
+    agg_cloud_cover: float,
+) -> None:
+    item = Item(
+        id=f"{collection_id}_{time}",
+        geometry=footprint,
+        bbox=bbox,
+        datetime=datetime.utcnow(),
+        properties={
+            "proj:shape": shape,
+            "proj:epsg": epsg,
+            "eo:agg_cloud_cover": agg_cloud_cover,
+        },
+    )
+    stac_items = json.dumps(
+        {"type": "FeatureCollection", "features": [item.to_dict()]},
+        indent=4,
+    )
+    with open(
+        os.path.join(file_path, f"{collection_id}_{time}.json"),
+        "w",
+        encoding="utf-8",
+    ) as f:
+        f.write(stac_items)

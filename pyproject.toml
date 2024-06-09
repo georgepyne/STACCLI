@@ -29,6 +29,12 @@ namespace_packages = true
 show_error_codes = true
 strict = true
 warn_return_any = true
-#warn_unused_configs = True
 disallow_untyped_decorators = "False"
 
+[pytest]
+python_files = "test_*"
+python_classes = "*Tests"
+python_functions = "test_*"
+markers =
+    stac
+    cog
