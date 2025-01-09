@@ -117,7 +117,7 @@ def main() -> None:
         )
         sys.exit(0)
     except ValueError as e:
-        print(e)
+        logger.error(e)
         sys.exit(1)
     except Exception as e:
         logger.error("STAC-CLI error:")

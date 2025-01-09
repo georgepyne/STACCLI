@@ -1,40 +1,37 @@
-[project]
-name = "rgb"
-version = "0.1.0"
-requires-python = ">=3.12"
-dynamic = ["dependencies"]
-
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-
-[project.optional-dependencies]
-dev = [
-    "ruff>=0.3.4,<0.4",
-    "pre-commit>=3.6.2,<4.0"
-]
-
-[tool.isort]
-profile = "black"
-
-[tool.ruff.lint]
-extend-select = ["I"]
-
-[tool.ruff.format]
-quote-style = "double"
-
-[tool.mypy]
-mypy_path = "STACCLI.src"
-explicit_package_bases = true
-namespace_packages = true
-show_error_codes = true
-strict = true
-warn_return_any = true
-disallow_untyped_decorators = "False"
-
-[pytest]
-python_files = "test_*"
-python_classes = "*Tests"
-python_functions = "test_*"
-markers =
-    stac
-    cog
+#[project]
+#name = "rgb"
+#version = "0.1.0"
+#requires-python = ">=3.10"
+#dynamic = ["dependencies"]
+#
+#[tool.setuptools.dynamic]
+#dependencies = { file = ["requirements.txt"] }
+#
+#[project.optional-dependencies]
+#dev = [
+#    "ruff>=0.3.4,<0.4",
+#    "pre-commit>=3.6.2,<4.0"
+#]
+#
+#[tool.isort]
+#profile = "black"
+#
+#[tool.ruff.lint]
+#extend-select = ["I"]
+#
+#[tool.ruff.format]
+#quote-style = "double"
+#
+#[tool.mypy]
+#mypy_path = "STACCLI.src"
+#explicit_package_bases = true
+#namespace_packages = true
+#show_error_codes = true
+#strict = true
+#warn_return_any = true
+#disallow_untyped_decorators = "False"
+#
+#[pytest]
+#python_files = "test_*"
+#python_classes = "*Tests"
+#python_functions = "test_*"

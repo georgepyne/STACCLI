@@ -88,3 +88,29 @@ def clip_cog(
         )  # Translate tif to cog
 
     return {0: clipped.shape[1], 1: clipped.shape[2]}
+
+
+# def raster_to_postgis(rater: List[DatasetReader])
+
+"""
+EXTEND STACCLI:
+write cog with bands
+write cog to tile and pixel x/y/z/pz
+add cloud detection bands
+compare cog structural similarity index
+cog change detection
+cog object detection
+upsert cog to postgres arg
+read cog from postgres arg
+
+
+
+
+write stac image and meta to vectorDB
+OPENAI CLIP 4 rasters with bounds/time search
+https://supabase.com/docs/guides/ai/examples/image-search-openai-clip
+
+test: geographic area
+swimming pools in bevelerly hills
+
+"""
