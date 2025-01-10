@@ -226,8 +226,8 @@ def warp_raster_to_xyz_tile_set(
             profile["transform"] = dst_transform
 
             profile["polygon"] = box(*[left, bottom, right, top])
-            wite_arguments_ = {**kwargs, **profile}
-            write_cog(**wite_arguments_)
+            wite_arguments = {**kwargs, **profile}
+            write_cog(**wite_arguments)
 
         return None
     except AttributeError as e:

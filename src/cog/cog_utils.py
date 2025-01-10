@@ -21,6 +21,7 @@ def merge_cogs(
     time = time.replace("/", "_")
     logger.info("Merging cogs.")
     merged, cog_transform = merge(cogs)
+
     out_meta = cogs[0].meta.copy()
     out_meta.update(
         {
