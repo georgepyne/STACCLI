@@ -66,6 +66,16 @@ def main() -> None:
         tile = args.pixel
         # insert mvt logic
         x, y, z, p = [int(i) for i in tile.split(",")]
+        if 0 <= z <= 24:
+            max_tile = mercantile.minmax(z)[1]  # get max tile coord for zoom level
+        else:
+            raise IndexError(f"Invalid zoom level: {z}")
+        if (
+                0 <= x >= max_tile or 0 <= y >= max_tile
+        ):  # coord values valid at zoom level
+            raise IndexError(
+                f"Invalid tile coordinate for zoom level {z}: x={x} y={y}."
+            )
         tile = mercantile.Tile(x, y, z)
 
         if not os.path.exists(file_path):
@@ -186,6 +196,18 @@ def main() -> None:
         #         2,
         #         {"INTERPOLATION": "NEAREST"},
         #     )
+
+        format =
+        cutlineWKT =
+        cutlineSRS = "epsg:4326",
+        cropToCutline = True,
+        # cutlineBlend
+        dstNodata = 0,
+        resampleAlg = "bilinear",
+        width = 256,
+        height = 256,
+
+        gdal.WarpOptions()
 
         gdal.Warp(
             "/Users/geo/Desktop/testWarp.tif",
