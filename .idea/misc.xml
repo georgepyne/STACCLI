@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="enabledOnReformat" value="true" />
     <option name="enabledOnSave" value="true" />
-    <option name="sdkName" value="tsl" />
+    <option name="sdkName" value="STACCLI" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="tsl" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="STACCLI" project-jdk-type="Python SDK" />
 </project>
