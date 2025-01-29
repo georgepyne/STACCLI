@@ -19,8 +19,9 @@ def merge_cogs(
 ) -> None:
     logger.setLevel(logging.INFO)
     time = time.replace("/", "_")
-    logger.info("Merging tifs.")
+    logger.info("Merging cogs.")
     merged, cog_transform = merge(cogs)
+
     out_meta = cogs[0].meta.copy()
     out_meta.update(
         {
@@ -44,10 +45,10 @@ def clip_cog(
     collection_id: str,
 ) -> Dict[int, int]:
     geojson_feature = geojson.Feature(geometry=polygon, properties={})
-    gt = rasterio.open(os.path.join(path, f"{collection_id}_{time}.tif"))
-    print("Clipping raster.")
+    cog = rasterio.open(os.path.join(path, f"{collection_id}_{time}.tif"))
+    logger.info("Clipping raster.")
     clipped, clip_transform = mask(
-        gt, shapes=[dict(geojson_feature["geometry"])], crop=True
+        cog, shapes=[dict(geojson_feature["geometry"])], crop=True, pad=True
     )
     out_meta = cogs[0].meta.copy()
     out_meta.update(
@@ -68,7 +69,7 @@ def clip_cog(
     )
 
     with rasterio.open(
-        os.path.join(path, f"{collection_id}_{time}"),
+        os.path.join(path, f"{collection_id}_{time}.tif"),
         "w",
         **out_meta,
     ) as cog:
@@ -76,15 +77,41 @@ def clip_cog(
         cog.close()
 
     with rasterio.open(
-        os.path.join(path, f"{collection_id}_{time}"), "r", **src_profile
+        os.path.join(path, f"{collection_id}_{time}.tif"), "r", **src_profile
     ) as cog:
         dst_profile = cog_profiles.get("deflate")
         cog_translate(
             cog,
-            os.path.join(path, f"{collection_id}_{time}"),
+            os.path.join(path, f"{collection_id}_{time}.tif"),
             dst_profile,
             in_memory=True,
             quiet=True,
         )  # Translate tif to cog
 
     return {0: clipped.shape[1], 1: clipped.shape[2]}
+
+
+# def raster_to_postgis(rater: List[DatasetReader])
+
+"""
+EXTEND STACCLI:
+write cog with bands
+write cog to tile and pixel x/y/z/pz
+add cloud detection bands
+compare cog structural similarity index
+cog change detection
+cog object detection
+upsert cog to postgres arg
+read cog from postgres arg
+
+
+
+
+write stac image and meta to vectorDB
+OPENAI CLIP 4 rasters with bounds/time search
+https://supabase.com/docs/guides/ai/examples/image-search-openai-clip
+
+test: geographic area
+swimming pools in bevelerly hills
+
+"""

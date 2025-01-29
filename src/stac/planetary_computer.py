@@ -15,7 +15,12 @@ def query_planetary_computer_stac(
         modifier=planetary_computer.sign_inplace,
     )
 
-    search = catalog.search(collections=[collection_id], bbox=bounds, datetime=time)
+    search = catalog.search(
+        collections=[collection_id],
+        bbox=bounds,
+        datetime=time,
+        query={"eo:cloud_cover": {"lt": 300}},
+    )
     items = search.get_all_items()
 
     return cast(Dict[str, Any], items.to_dict())
