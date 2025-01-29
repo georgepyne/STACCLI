@@ -2,14 +2,14 @@ import argparse
 import logging
 import os
 import sys
+
 import mercantile
-from typing import List, cast
 from osgeo import gdal
-from pyproj import Transformer
 from shapely.geometry import box
+
 from src.stac.planetary_computer import query_planetary_computer_stac
 from src.stac.stac_parameter_parser import parse_bbox, parse_time_window
-from src.stac.stac_utils import get_bbox_and_footprint, order_stac, write_stac_meta
+from src.stac.stac_utils import get_bbox_and_footprint, order_stac
 
 logger = logging.getLogger(__name__)
 
@@ -56,19 +56,11 @@ def main() -> None:
     try:
         from pyproj import datadir
 
-        os.environ["PROJ_LIB"] = (
-            "C:\\Users\\Geo\\miniconda3\\envs\\STACCLI\\Library\\share\\proj"
-        )
-        print(os.environ.get("PROJ_LIB"))
 
-        print(datadir.get_data_dir())
 
         # parse args
         args = parser.parse_args()
-        datadir.set_data_dir(
-            "C:\\Program Files\\PostgreSQL\\13\\share\\contrib\\postgis-3.0\\proj\\proj.db"
-        )
-        print(datadir.get_data_dir())
+
         bounds = parse_bbox(args.bounds)
         time = parse_time_window(args.time)
         collection_id = args.collection
@@ -86,6 +78,10 @@ def main() -> None:
                 f"Invalid tile coordinate for zoom level {z}: x={x} y={y}."
             )
         tile = mercantile.Tile(x, y, z)
+        width = int(len(mercantile.children(tile, zoom=p)) / 2)
+        height = width
+
+
 
         if not os.path.exists(file_path):
             logger.exception(f"No such directory: {file_path}")
@@ -141,9 +137,9 @@ def main() -> None:
 
             polygon = box(*[left, bottom, right, top])
 
-            os.environ["PROJ_LIB"] = (
-                "C:\\Users\\Geo\\miniconda3\\envs\\STACCLI\\Library\\share\\proj"
-            )
+            # os.environ["PROJ_LIB"] = (
+            #     "C:\\Users\\Geo\\miniconda3\\envs\\STACCLI\\Library\\share\\proj"
+            # )
 
             outds = gdal.BuildVRT(outvrt, cog_urls, separate=True)
 
@@ -227,22 +223,24 @@ def main() -> None:
             # warp_objects
             # gdal.WarpOptions(**wo)
 
-            xres = outds.RasterXSize
-            yres = outds.RasterYSize
+            # xres = outds.RasterXSize
+            # yres = outds.RasterYSize
 
-            outds = gdal.Translate(
-                f"{file_path}/{id}.tif",
+            # outds = gdal.Translate(
+            #     f"{file_path}/{id}.tif",
+            #     outds,
+            #     # dstNodata=-1,
+            #     resampleAlg="bilinear",
+            #     format="COG",
+            #     width=xres,
+            #     height=yres,
+            # )
+
+            print("calling GDAL WARP")
+
+            outds = gdal.Warp(
+                f"{file_path}/{id}-{x}-{y}-{z}-{p}.tif",
                 outds,
-                # dstNodata=-1,
-                resampleAlg="bilinear",
-                format="COG",
-                width=xres,
-                height=yres,
-            )
-
-            gdal.Warp(
-                f"{file_path}/{id}.tif",
-                outvrt,
                 # errorThreshold
                 format="COG",
                 cutlineWKT=polygon.wkt,
@@ -251,8 +249,8 @@ def main() -> None:
                 # cutlineBlend
                 dstNodata=-1,
                 resampleAlg="bilinear",
-                width=xres,
-                height=yres,
+                width=width,
+                height=height,
             )
 
             output_types = [gdal.GDT_Byte, gdal.GDT_UInt16, gdal.GDT_Float32]
@@ -278,7 +276,7 @@ def main() -> None:
         epsg = items["features"][0]["properties"][
             "proj:epsg"
         ]  # get EPSG code from STAC meta
-        transformer = Transformer.from_crs(4326, epsg)
+        # transformer = Transformer.from_crs(4326, epsg)
 
         # # merge cogs
         # time = time.replace("/", "_")
@@ -286,9 +284,9 @@ def main() -> None:
 
         # # transform bbox
         left, bottom, right, top = bounds
-        left, bottom, right, top = list(
-            sum([i for i in transformer.itransform([(bottom, left), (top, right)])], ())
-        )
+        # left, bottom, right, top = list(
+        #     sum([i for i in transformer.itransform([(bottom, left), (top, right)])], ())
+        # )
         polygon = box(*[left, bottom, right, top])
 
         # clip cog
@@ -302,16 +300,16 @@ def main() -> None:
             os.path.join(file_path, f"{collection_id}_{time}.tif")
         )
 
-        write_stac_meta(
-            file_path,
-            time,
-            collection_id,
-            footprint,
-            cast(List[float], bbox),
-            epsg,
-            polygon,
-            agg_cloud_cover,
-        )
+        # write_stac_meta(
+        #     file_path,
+        #     time,
+        #     collection_id,
+        #     footprint,
+        #     cast(List[float], bbox),
+        #     epsg,
+        #     polygon,
+        #     agg_cloud_cover,
+        # )
         sys.exit(0)
     except ValueError as e:
         logger.error(e)
